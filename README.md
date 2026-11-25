@@ -1,6 +1,6 @@
 # Veronica thermals
 
-Thermal hotspots and a thermal-likelihood heatmap around Veronica airfield, Namibia, built from 56 self-launched glider flights from Veronica (IGC files from WeGlide, Jan 2023 – Nov 2026).
+Thermal hotspots and a thermal-likelihood heatmap around Veronica airfield, Namibia, built from 59 self-launched glider flights from Veronica (IGC files from WeGlide, Jan 2023 – Nov 2026).
 
 **Map:** https://r5fan.github.io/Veronica-thermals/ — tap **GPS** to show your position and track (allow location in the browser).
 
