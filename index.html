@@ -41,6 +41,11 @@ tbody tr{cursor:pointer}
 .ring{font:600 11px Overpass,sans-serif;fill:var(--brown)}
 ul.m{padding-left:18px;margin:6px 0;font-size:14px;max-height:200px;overflow:auto}
 .scroll{overflow-x:auto}
+.tbs{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.tb{display:flex;flex-wrap:wrap;gap:4px}.tb::-webkit-scrollbar{display:none}
+.tb button{flex:none;min-height:36px;padding:0 10px;border:1px solid var(--line);background:var(--land);color:var(--ink);font:600 13px Overpass,sans-serif;border-radius:18px;cursor:pointer;white-space:nowrap}
+.tb button[aria-pressed=true]{background:var(--ink);color:var(--land);border-color:var(--ink)}
+.tb+.tb{border-top:1px solid var(--line);padding-top:6px}
 details.fold{margin:6px 0}details.fold>summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:center;color:var(--mute)}
 details.fold.big table{font-weight:400}details.fold.big>summary{font-size:22px;color:var(--ink);font-weight:800}
 .reflab{font:600 12px Overpass,sans-serif;paint-order:stroke;stroke:var(--land);stroke-width:3px;fill:#4a3a2a}
@@ -56,22 +61,18 @@ details.fold.big table{font-weight:400}details.fold.big>summary{font-size:22px;c
 <div class="band" style="max-width:1240px;margin:0 auto;padding-bottom:0">
 <h1 id="hl">Where thermals keep turning up around Veronica</h1>
 <details class="fold"><summary>About this map</summary><p class="lede" id="lede"></p></details>
-<div class="seg" role="group" aria-label="View"><button data-v="alt" aria-pressed="true">Where you climb</button><button data-v="src" aria-pressed="false">Ground source</button></div>
-<div class="seg" role="group" aria-label="Time of day"><button data-p="all" aria-pressed="true">All day</button><button data-p="morning" aria-pressed="false">Before 12:30</button><button data-p="midday" aria-pressed="false">12:30–15:00</button><button data-p="afternoon" aria-pressed="false">After 15:00</button></div>
-<div class="seg" role="group" aria-label="Layers">
-<button data-l="heat" aria-pressed="true">Heatmap</button>
+</div>
+<div class="band" style="padding-top:0"><div class="wrap">
+<div class="mapcol"><div class="mapbox" id="mb"><svg id="map" aria-label="Map of climbs around Veronica"></svg>
+<div class="ctrl"><button id="zi" aria-label="Zoom in">+</button><button id="zo" aria-label="Zoom out">−</button><button id="gps" aria-pressed="false" aria-label="GPS">GPS</button><button id="fol" aria-pressed="true" aria-label="Follow">⌖</button></div><div id="gpsinfo" class="gpsinfo" hidden></div></div>
+<div class="tbs"><div class="tb" role="group" aria-label="View"><button data-v="alt" aria-pressed="true">Climbs at height</button><button data-v="src" aria-pressed="false">Ground source</button></div><div class="tb" role="group" aria-label="Time of day"><button data-p="all" aria-pressed="true">All day</button><button data-p="morning" aria-pressed="false">&lt;12:30</button><button data-p="midday" aria-pressed="false">12:30–15:00</button><button data-p="afternoon" aria-pressed="false">&gt;15:00</button></div><div class="tb" role="group" aria-label="Layers"><button data-l="heat" aria-pressed="true">Heatmap</button>
 <button data-l="hs" aria-pressed="true">Hotspots</button>
 <button data-l="dots" aria-pressed="false">Climbs</button>
 <button data-l="tracks" aria-pressed="false">Tracks</button>
-<button data-l="rel" aria-pressed="false">Engine-off points</button>
-<button data-l="roads" aria-pressed="true">Roads &amp; towns</button>
+<button data-l="rel" aria-pressed="false">Engine off</button>
+<button data-l="roads" aria-pressed="true">Roads</button>
 <button data-l="af" aria-pressed="true">Airfields</button>
-<button data-l="as" aria-pressed="true" id="asb" hidden>Airspace</button>
-</div>
-<div class="seg" role="group" aria-label="Zoom"><button id="vNear">Near Veronica</button><button id="vAll">Whole area</button></div></div>
-<div class="band" style="padding-top:0"><div class="wrap">
-<div class="mapbox" id="mb"><svg id="map" aria-label="Map of climbs around Veronica"></svg>
-<div class="ctrl"><button id="zi" aria-label="Zoom in">+</button><button id="zo" aria-label="Zoom out">−</button><button id="gps" aria-pressed="false" aria-label="GPS">GPS</button><button id="fol" aria-pressed="true" aria-label="Follow">⌖</button></div><div id="gpsinfo" class="gpsinfo" hidden></div></div>
+<button data-l="as" aria-pressed="true" id="asb" hidden>Airspace</button></div><div class="tb" role="group" aria-label="Zoom"><button id="vNear">Zoom: Veronica</button><button id="vAll">Zoom: all</button></div></div></div>
 <aside id="side">
 <h2>Legend</h2>
 <div class="hbar" aria-hidden="true"></div>
