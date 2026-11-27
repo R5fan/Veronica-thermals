@@ -135,7 +135,7 @@ function draw(){
  const at=el('text',{x:0,y:0,class:'lab sc ','data-dx':10,'data-dy':-8});at.textContent='Veronica';g.appendChild(at);
  if(L.hs)for(const h of HS()){if(PR!=='all'&&!h.per[PR])continue;const[x,y]=P(h.lat,h.lon);const t=el('text',{x,y,class:'lab sc','data-dx':-8,'data-dy':5});t.textContent=h.id;g.appendChild(t)}
  drawGPS();scaleMarks()}
-function scaleMarks(){if(!vb||!g)return;const u=vb.w/svg.clientWidth;for(const e of g.querySelectorAll('[data-minw]'))e.style.display=vb.w<+e.dataset.minw?'':'none';const me=svg.querySelector('#me');if(me){me.setAttribute('r',8*u)}
+function scaleMarks(){if(!vb||!g)return;const u=vb.w/svg.clientWidth;for(const e of g.querySelectorAll('[data-minw]'))e.style.display=vb.w<+e.dataset.minw?'':'none';placeGl();
  for(const d of g.querySelectorAll('.dot'))d.setAttribute('r',d.dataset.r*u);
  for(const t of g.querySelectorAll('.sc')){t.style.fontSize=((t.classList.contains('ring')||t.classList.contains('aslab')?11:t.classList.contains('reflab')||t.classList.contains('aflab')?12:14)*u)+'px';t.style.strokeWidth=(t.classList.contains('lab')?4:3)*u;if(t.dataset.dx){if(!t.dataset.x){t.dataset.x=t.getAttribute('x');t.dataset.y=t.getAttribute('y')}t.setAttribute('x',+t.dataset.x+t.dataset.dx*u);t.setAttribute('y',+t.dataset.y+t.dataset.dy*u)}}
  const r=g.querySelector('.apr');if(r){const s=9*u;r.setAttribute('x',-s/2);r.setAttribute('y',-s/2);r.setAttribute('width',s);r.setAttribute('height',s);r.setAttribute('transform','rotate(45)')}}
@@ -167,11 +167,16 @@ for(const b of document.querySelectorAll('[data-p]'))b.onclick=()=>{PR=b.dataset
 for(const b of document.querySelectorAll('[data-l]'))b.onclick=()=>{const k=b.dataset.l;L[k]=!L[k];b.setAttribute('aria-pressed',L[k]);draw()};
 
 let trk=[],pos=null,wid=null,follow=true;
-function drawGPS(){const old=svg.querySelector('#gpsg');if(old)old.remove();if(!trk.length)return;const gg=el('g',{id:'gpsg'});
- gg.appendChild(el('polyline',{points:trk.map(p=>p.join(',')).join(' '),fill:'none',stroke:'#0b57d0','stroke-width':3,'vector-effect':'non-scaling-stroke','stroke-linejoin':'round'}));
- const p=trk[trk.length-1];gg.appendChild(el('circle',{id:'me',cx:p[0],cy:p[1],r:1,fill:'#0b57d0',stroke:'#fff','stroke-width':3,'vector-effect':'non-scaling-stroke'}));svg.appendChild(gg)}
+let hdg=0;
+function drawGPS(){const old=svg.querySelector('#gpsg');if(old)old.remove();if(!trk.length)return;const gg=el('g',{id:'gpsg'}),pts=trk.map(p=>p.join(',')).join(' ');
+ gg.appendChild(el('polyline',{points:pts,fill:'none',stroke:'#fff','stroke-width':7,'vector-effect':'non-scaling-stroke','stroke-linejoin':'round','stroke-linecap':'round'}));
+ gg.appendChild(el('polyline',{points:pts,fill:'none',stroke:'#7b1fa2','stroke-width':3.5,'vector-effect':'non-scaling-stroke','stroke-linejoin':'round','stroke-linecap':'round'}));
+ const p=trk[trk.length-1],gl=el('g',{id:'gl','data-x':p[0],'data-y':p[1]});
+ gl.appendChild(el('path',{d:'M0,-10 L1.2,-4 L13,-2.2 L13,0.2 L1.2,0.4 L0.9,6 L4.5,7 L4.5,8.8 L-4.5,8.8 L-4.5,7 L-0.9,6 L-1.2,0.4 L-13,0.2 L-13,-2.2 L-1.2,-4 Z',fill:'#7b1fa2',stroke:'#fff','stroke-width':1.6,'stroke-linejoin':'round'}));
+ gg.appendChild(gl);svg.appendChild(gg);placeGl()}
+function placeGl(){const gl=svg.querySelector('#gl');if(!gl||!vb)return;const u=vb.w/svg.clientWidth*1.8;gl.setAttribute('transform',`translate(${gl.dataset.x},${gl.dataset.y}) rotate(${hdg}) scale(${u})`)}
 const info=document.getElementById('gpsinfo'),gb=document.getElementById('gps'),fb=document.getElementById('fol');
-function onPos(e){const c=e.coords,p=P(c.latitude,c.longitude),l=trk[trk.length-1];if(!l||Math.hypot(p[0]-l[0],p[1]-l[1])>0.03)trk.push(p);
+function onPos(e){const c=e.coords,p=P(c.latitude,c.longitude),l=trk[trk.length-1];if(c.heading!=null&&!isNaN(c.heading)&&(c.speed==null||c.speed>2))hdg=c.heading;else if(l&&Math.hypot(p[0]-l[0],p[1]-l[1])>0.02)hdg=Math.atan2(p[0]-l[0],-(p[1]-l[1]))*180/Math.PI;if(!l||Math.hypot(p[0]-l[0],p[1]-l[1])>0.03)trk.push(p);
  const d=Math.hypot(p[0],p[1]),b=(Math.atan2(p[0],-p[1])*180/Math.PI+360)%360;
  let near='';if(D){let best=null;for(const h of HS()){const q=P(h.lat,h.lon),dd=Math.hypot(q[0]-p[0],q[1]-p[1]);if(!best||dd<best[1])best=[h,dd]}if(best)near=` · ${best[0].id} ${best[1].toFixed(1)} km`}
  info.hidden=false;info.textContent=`${d.toFixed(1)} km ${C16[Math.round(b/22.5)%16]} of Veronica${c.altitude!=null?' · '+Math.round(c.altitude)+' m':''}${c.speed!=null?' · '+Math.round(c.speed*3.6)+' km/h':''}${near}`;
